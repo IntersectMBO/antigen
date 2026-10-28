@@ -7,6 +7,7 @@ module Main (main) where
 import Control.DeepSeq (deepseq)
 import Criterion.Main (Benchmarkable, bench, bgroup, defaultMain, nfIO)
 import qualified Data.Text as T
+import Test.AntiGen ((|!))
 import Test.AntiGen.Internal (
   AntiGen,
   ZapResult (..),
@@ -14,7 +15,6 @@ import Test.AntiGen.Internal (
   evalToPartial,
   withAnnotation,
   zapAt,
-  (|!),
  )
 import Test.QuickCheck (Arbitrary (..), generate)
 import Test.QuickCheck.GenT (MonadGen (..))

@@ -12,6 +12,7 @@
 module Test.AntiGen (
   AntiGen,
   ZapResult (..),
+  MonadAntiGen (..),
   (|!),
   (#!),
   (||!),
@@ -20,6 +21,7 @@ module Test.AntiGen (
   zapAntiGen,
   zapAntiGenResult,
   prettyZapResult,
+  annotate,
   scaleWeight,
   reweigh,
 
@@ -46,18 +48,15 @@ module Test.AntiGen (
 
 import Control.Monad (join, replicateM)
 import System.Random (Random)
+import Test.AntiGen.Class (MonadAntiGen (..), annotate, reweigh, scaleWeight, (#!), (|!))
 import Test.AntiGen.Internal (
   AntiGen,
   ZapResult (..),
   prettyZapResult,
-  reweigh,
   runAntiGen,
-  scaleWeight,
   withAnnotation,
   zapAntiGen,
   zapAntiGenResult,
-  (#!),
-  (|!),
  )
 import Test.QuickCheck (
   Arbitrary (..),
@@ -192,6 +191,8 @@ antiDistinctPair =
 (||!) :: AntiGen a -> AntiGen a -> AntiGen a
 a ||! b = join $ pure a |! pure b
 
+infixl 6 ||!
+
 -- | Like 'replicateM', but normalizes the weight of each element by @1\/n@.
 --
 -- The total weight of the list becomes the average weight of its elements,
@@ -199,5 +200,3 @@ a ||! b = join $ pure a |! pure b
 -- disproportionately higher chance of being zapped.
 replicateMNorm :: Int -> AntiGen a -> AntiGen [a]
 replicateMNorm n = replicateM n . scaleWeight (/ fromIntegral n)
-
-infixl 6 ||!
