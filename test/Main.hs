@@ -26,6 +26,7 @@ import Test.AntiGen (
   faultyNum,
   faultyTry,
   replicateMNorm,
+  reweigh,
   runAntiGen,
   zapAntiGen,
   (|!),
@@ -36,7 +37,6 @@ import Test.AntiGen.Internal (
   countDecisionPoints,
   evalToPartial,
   prettyZapResult,
-  reweigh,
   withAnnotation,
   zapAntiGenResult,
  )

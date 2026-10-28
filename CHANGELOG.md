@@ -1,5 +1,11 @@
 # Revision history for antigen
 
+## 0.5.0.0
+
+* Add `Test.AntiGen.Class`
+* Add `MonadAntiGen`
+* Make all the helper functions work with abstract monads instead of `AntiGen`
+
 ## 0.4.0.0
 
 * Add `antiSamePair`

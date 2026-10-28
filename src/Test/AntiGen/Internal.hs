@@ -14,8 +14,7 @@ module Test.AntiGen.Internal (
   AntiGen,
   ZapResult (..),
   prettyZapResult,
-  (|!),
-  (#!),
+  mkAntiGen,
   zapAntiGen,
   zapAntiGenResult,
   runAntiGen,
@@ -24,8 +23,7 @@ module Test.AntiGen.Internal (
   countDecisionPoints,
   zapAt,
   withAnnotation,
-  scaleWeight,
-  reweigh,
+  withScaledWeight,
 ) where
 
 import Control.Monad ((<=<))
@@ -82,33 +80,12 @@ mkAntiGen :: Gen a -> Gen a -> AntiGen a
 mkAntiGen active alt =
   AntiGen $ F $ \p b -> b $ BiGen (p <$> active) (Just $ p <$> alt) 1 id
 
--- | Create a negatable generator by providing a positive and a negative
--- generator
-(|!) :: Gen a -> Gen a -> AntiGen a
-(|!) = mkAntiGen
-
-infixl 6 |!
-
--- | Postfix annotation operator. Annotates an 'AntiGen' with a label that
--- will be included in 'ZapResult' when this generator is zapped.
---
--- @
--- myGen = positive |! negative #! "sign"
--- @
-(#!) :: AntiGen a -> Text -> AntiGen a
-(#!) = flip withAnnotation
-
-infixl 5 #!
-
 -- | Wrap an AntiGen with an annotation
 withAnnotation :: Text -> AntiGen a -> AntiGen a
 withAnnotation ann inner = wrap $ Annotate ann inner pure
 
-scaleWeight :: (Float -> Float) -> AntiGen a -> AntiGen a
-scaleWeight rw inner = wrap $ Reweigh rw inner pure
-
-reweigh :: Float -> AntiGen a -> AntiGen a
-reweigh w = scaleWeight $ const w
+withScaledWeight :: (Float -> Float) -> AntiGen a -> AntiGen a
+withScaledWeight rw inner = wrap $ Reweigh rw inner pure
 
 data DecisionPoint next where
   DecisionPoint ::
