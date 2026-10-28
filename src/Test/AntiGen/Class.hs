@@ -9,7 +9,6 @@ module Test.AntiGen.Class (
   (#!),
 ) where
 
-import Control.Monad.Cont (ContT, mapContT)
 import Control.Monad.Except (ExceptT, mapExceptT)
 import Control.Monad.Identity (IdentityT, mapIdentityT)
 import qualified Control.Monad.RWS.CPS as CPSRWS
@@ -62,12 +61,6 @@ reweigh w = scaleWeight $ const w
 infixl 5 #!
 
 -- # MTL instances
-
-instance MonadAntiGen m => MonadAntiGen (ContT e m) where
-  liftAntiGen = lift . liftAntiGen
-  p |! n = lift $ p |! n
-  annotate t = mapContT $ annotate t
-  scaleWeight f = mapContT $ scaleWeight f
 
 instance MonadAntiGen m => MonadAntiGen (ExceptT e m) where
   liftAntiGen = lift . liftAntiGen
